@@ -11,6 +11,7 @@ This project was created using the [Ktor Project Generator](https://start.ktor.i
 - Sending messages to the Discord platform
 - Receiving user messages from the Discord platform directed to the application (bot)
 - Returning a list of categories from external API upon specific user request: `!categories`
+- Returning a list of products from specific category from external API upon specific user request: `!products <category-name>`
 
 ## Functionalities
 
@@ -35,6 +36,9 @@ The bot listens for messages in the configured Discord server and responds with 
 
 **Sending list of categories to Discord**
 When a user sends a message: `!categories`, the bot replies with a list of categories from external API.
+
+**Sending list of products from specific category to Discord**
+When a user sends a message: `!products <category-name>`, the bot replies with a list of categories from external API.
 
 ## Building & Running
 

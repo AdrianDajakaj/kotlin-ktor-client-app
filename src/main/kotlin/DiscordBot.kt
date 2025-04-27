@@ -25,6 +25,8 @@ class DiscordBot(private val token: String) {
             if (message.author?.isBot == false) {
                 when{
                     message.content.startsWith("!categories") -> handleCategoriesCommand()
+                    message.content.startsWith("!products") -> handleProductsCommand(message.content)
+
                 }
                 println("Received message from ${message.author?.username}: ${message.content}")
                 try {
@@ -50,7 +52,8 @@ class DiscordBot(private val token: String) {
             val responseText = buildString {
                 append("**Categories list:**\n")
                 categories.forEach {
-                    append("- ${it.name}\n Description: ${it.description}\n")
+                    append("- ${it.name}\n")
+                    append("\tDescription: ${it.description}\n")
                 }
             }
             
@@ -60,13 +63,42 @@ class DiscordBot(private val token: String) {
         }
     }
 
-    private suspend fun getCategories(): List<Category> {
-        val response = httpClient.get("$apiBaseUrl/categories") {
-        headers {
-            append("ngrok-skip-browser-warning", "true")
+    private suspend fun MessageCreateEvent.handleProductsCommand(command: String) {
+        try {
+            val categoryName = command.removePrefix("!products").trim()
+            val categories = getCategories()
+            val category = categories.find { it.name.equals(categoryName, true) }
+            if(category == null){
+                message.channel.createMessage("Category: '$categoryName' does not exist!")
+            }
+            else{
+                val products = getProducts(category.id)
+                val responseText = buildString {
+                    append("**Products from category ${category.name}:**\n")
+                    products.forEach {
+                        append("- ${it.name}\n")
+                        append("\tDescription: ${it.description}\n")
+                        append("\tStock: ${it.stock}\n")
+                        append("\tPrice: ${it.price} ${it.currency}\n")
+                        if (it.discount != null) append("\tDiscount: ${it.discount} %\n")
+                    }
+                }
+                message.channel.createMessage(responseText)
+            }
+        } catch (e: Exception) {
+            message.channel.createMessage("Failed to fetch products. Error: ${e.message}")
         }
     }
-    return json.decodeFromString(response.bodyAsText())
+
+    private suspend fun getCategories(): List<Category> {
+        val response = httpClient.get("$apiBaseUrl/categories")
+        return json.decodeFromString(response.bodyAsText())
+    }
+
+    private suspend fun getProducts(categoryId: Long): List<Product> {
+        val response = httpClient.get("$apiBaseUrl/products")
+        val allProducts = json.decodeFromString<List<Product>>(response.bodyAsText())
+        return allProducts.filter { it.categoryId == categoryId }
     }
 
 }
