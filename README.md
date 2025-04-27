@@ -1,40 +1,21 @@
 # kotlinktorclientapp
 
-A simple Ktor application that sends and receives messages to/from a Discord server using a bot.
+A simple Ktor application that sends and receives messages to/from a Discord server using a bot. The app returns data from an external API upon request from a Discord user.
+
+**External API** : [scala-play-crud](https://github.com/AdrianDajakaj/scala-play-crud.git)
+
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
-
-Here are some useful links to get you started:
-
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
 
 ## Features
 
-Here's a list of features included in this project:
+- Sending messages to the Discord platform
+- Receiving user messages from the Discord platform directed to the application (bot)
+- Returning a list of categories from external API upon specific user request: `!categories`
 
-| Name                                                                   | Description                                                                        |
-| ------------------------------------------------------------------------|------------------------------------------------------------------------------------ |
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [WebSockets](https://start.ktor.io/p/ktor-websockets)                  | Adds WebSocket protocol support for bidirectional client connections               |
-| [Koin](https://start.ktor.io/p/koin)                                   | Provides dependency injection                                                      |
-| [Call Logging](https://start.ktor.io/p/call-logging)                   | Logs client requests                                                               |
-| [Status Pages](https://start.ktor.io/p/status-pages)                   | Provides exception handling for routes                                             |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [Sessions](https://start.ktor.io/p/ktor-sessions)                      | Adds support for persistent sessions through cookies or headers                    |
-| [Authentication](https://start.ktor.io/p/auth)                         | Provides extension point for handling the Authorization header                     |
-| [Authentication OAuth](https://start.ktor.io/p/auth-oauth)             | Handles OAuth Bearer authentication scheme                                         |
-| [Compression](https://start.ktor.io/p/compression)                     | Compresses responses using encoding algorithms like GZIP                           |
-| [CORS](https://start.ktor.io/p/cors)                                   | Enables Cross-Origin Resource Sharing (CORS)                                       |
-| [Default Headers](https://start.ktor.io/p/default-headers)             | Adds a default set of headers to HTTP responses                                    |
-| Discord Bot Integration            | Sends and receives messages from Discord using a bot                           |
-
-## New functionality
+## Functionalities
 
 **Sending messages to Discord**
 
-You can now send messages directly to a Discord server using an HTTP POST request.
 Example using `curl`:
 ```bash
 curl -X POST "http://localhost:8080/send" \
@@ -44,7 +25,7 @@ curl -X POST "http://localhost:8080/send" \
 This will send the content of the request (Hello!) to the configured Discord webhook.
 
 **Receiving messages from Discord**
-The application can now receive messages from users on Discord directed to the bot. When a user sends a message, the bot replies with a thank-you message.
+When a user sends a message, the bot replies with a thank-you message.
 Example response in the server log:
 ```bash
 Received message from user123: Hello Bot!
@@ -52,22 +33,27 @@ Reply sent to user123
 ```
 The bot listens for messages in the configured Discord server and responds with a simple acknowledgment.
 
-## Project structure for new features
-- `DiscordClient.kt`: Contains the sendDiscordMessage(message: String) function, which sends a POST request to the Discord Webhook URL.
-
-- `MessageRequest.kt`: Defines the MessageRequest data class used for parsing incoming JSON payloads.
-
-- Modified `Routing.kt`: Adds a new POST /send endpoint that accepts a message payload and sends it asynchronously to Discord.
-
-- `Serialization.kt`: Configures JSON serialization using kotlinx.serialization, with pretty print, lenient parsing, and ignoring unknown keys.
-
-- `DiscordBot.kt`: Contains the logic for the bot, handling both sending and receiving messages from Discord.
-
-- `Application.kt`: Initializes and runs the Discord bot.
-
-- `build.gradle.kts`: Updated to include dependencies for the Kord library and bot configuration.
+**Sending list of categories to Discord**
+When a user sends a message: `!categories`, the bot replies with a list of categories from external API.
 
 ## Building & Running
+
+Before building & running project:
+- run API from: [scala-play-crud](https://github.com/AdrianDajakaj/scala-play-crud.git)
+
+- set environment variables:
+
+```bash
+export API_BASE_URL=<your-api-url>
+```
+
+```bash
+export DISCORD_WEBHOOK_URL=<your-discord-webhook-url>
+```
+
+```bash
+export DISCORD_BOT_TOKEN=<your-discord-bot-token>
+```
 
 To build or run the project, use one of the following tasks:
 
