@@ -26,7 +26,17 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import org.slf4j.event.*
 
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
+
 fun Application.configureSerialization() {
+    install(ContentNegotiation) {
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+        })
+    }
     routing {
         get("/json/kotlinx-serialization") {
                 call.respond(mapOf("hello" to "world"))

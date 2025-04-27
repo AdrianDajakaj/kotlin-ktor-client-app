@@ -1,5 +1,6 @@
 # kotlinktorclientapp
 
+A simple Ktor application that sends messages to a Discord server using a Webhook.
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
 
 Here are some useful links to get you started:
@@ -27,6 +28,25 @@ Here's a list of features included in this project:
 | [Compression](https://start.ktor.io/p/compression)                     | Compresses responses using encoding algorithms like GZIP                           |
 | [CORS](https://start.ktor.io/p/cors)                                   | Enables Cross-Origin Resource Sharing (CORS)                                       |
 | [Default Headers](https://start.ktor.io/p/default-headers)             | Adds a default set of headers to HTTP responses                                    |
+
+## New functionality
+You can now send messages directly to a Discord server using an HTTP POST request.
+Example using `curl`:
+```bash
+curl -X POST "http://localhost:8080/send" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Hello!"}'
+```
+This will send the content of the request (Hello!) to the configured Discord webhook.
+
+**Project structure for this feature**
+- `DiscordClient.kt`: Contains the sendDiscordMessage(message: String) function, which sends a POST request to the Discord Webhook URL.
+
+- `MessageRequest.kt`: Defines the MessageRequest data class used for parsing incoming JSON payloads.
+
+- Modified `Routing.kt`: Adds a new POST /send endpoint that accepts a message payload and sends it asynchronously to Discord.
+
+- `Serialization.kt`: Configures JSON serialization using kotlinx.serialization, with pretty print, lenient parsing, and ignoring unknown keys.
 
 ## Building & Running
 

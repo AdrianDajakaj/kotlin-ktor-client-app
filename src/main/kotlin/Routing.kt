@@ -26,6 +26,9 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import org.slf4j.event.*
 
+import com.github.adriandajakaj.sendDiscordMessage
+import kotlinx.coroutines.launch
+
 fun Application.configureRouting() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
@@ -35,6 +38,13 @@ fun Application.configureRouting() {
     routing {
         get("/") {
             call.respondText("Hello World!")
+        }
+        post("/send") {
+            val request = call.receive<MessageRequest>()
+            launch {
+                sendDiscordMessage(request.content)
+            }
+            call.respondText("Sent message: ${request.content}")
         }
     }
 }
