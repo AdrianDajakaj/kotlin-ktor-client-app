@@ -1,6 +1,6 @@
 # kotlinktorclientapp
 
-A simple Ktor application that sends messages to a Discord server using a Webhook.
+A simple Ktor application that sends and receives messages to/from a Discord server using a bot.
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
 
 Here are some useful links to get you started:
@@ -28,8 +28,12 @@ Here's a list of features included in this project:
 | [Compression](https://start.ktor.io/p/compression)                     | Compresses responses using encoding algorithms like GZIP                           |
 | [CORS](https://start.ktor.io/p/cors)                                   | Enables Cross-Origin Resource Sharing (CORS)                                       |
 | [Default Headers](https://start.ktor.io/p/default-headers)             | Adds a default set of headers to HTTP responses                                    |
+| Discord Bot Integration            | Sends and receives messages from Discord using a bot                           |
 
 ## New functionality
+
+**Sending messages to Discord**
+
 You can now send messages directly to a Discord server using an HTTP POST request.
 Example using `curl`:
 ```bash
@@ -39,7 +43,16 @@ curl -X POST "http://localhost:8080/send" \
 ```
 This will send the content of the request (Hello!) to the configured Discord webhook.
 
-**Project structure for this feature**
+**Receiving messages from Discord**
+The application can now receive messages from users on Discord directed to the bot. When a user sends a message, the bot replies with a thank-you message.
+Example response in the server log:
+```bash
+Received message from user123: Hello Bot!
+Reply sent to user123
+```
+The bot listens for messages in the configured Discord server and responds with a simple acknowledgment.
+
+## Project structure for new features
 - `DiscordClient.kt`: Contains the sendDiscordMessage(message: String) function, which sends a POST request to the Discord Webhook URL.
 
 - `MessageRequest.kt`: Defines the MessageRequest data class used for parsing incoming JSON payloads.
@@ -47,6 +60,12 @@ This will send the content of the request (Hello!) to the configured Discord web
 - Modified `Routing.kt`: Adds a new POST /send endpoint that accepts a message payload and sends it asynchronously to Discord.
 
 - `Serialization.kt`: Configures JSON serialization using kotlinx.serialization, with pretty print, lenient parsing, and ignoring unknown keys.
+
+- `DiscordBot.kt`: Contains the logic for the bot, handling both sending and receiving messages from Discord.
+
+- `Application.kt`: Initializes and runs the Discord bot.
+
+- `build.gradle.kts`: Updated to include dependencies for the Kord library and bot configuration.
 
 ## Building & Running
 

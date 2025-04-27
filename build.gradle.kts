@@ -17,6 +17,8 @@ application {
 
 repositories {
     mavenCentral()
+    maven("https://repo.kord.dev/snapshots")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
@@ -41,6 +43,7 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     implementation("io.ktor:ktor-client-core:3.1.2")
     implementation("io.ktor:ktor-client-cio:3.1.2")
+    implementation("dev.kord:kord-core:0.15.0")
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
